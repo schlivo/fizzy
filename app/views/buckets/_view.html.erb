@@ -16,7 +16,7 @@
 
   <div class="flex align-center justify-center flex-column flex-wrap center">
     <%= link_to path, class: "txt-ink flex flex-column" do %>
-      <strong class="txt-x-large"><%= view.summary %> in <%= view.bucket.name %></strong>
+      <strong class="txt-x-large"><%= view.summary.html_safe %> in <mark><%= view.bucket.name %></mark></strong>
     <% end %>
   </div>
 </li>

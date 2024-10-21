@@ -1,6 +1,12 @@
 .bucket {
   inline-size: 45ch;
   line-height: 1.2;
+
+  mark {
+    background-color: transparent;
+    color: var(--color-link);
+    text-decoration: underline;
+  }
 }
 
 .buckets {
