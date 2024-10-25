@@ -13,7 +13,7 @@ module FiltersHelper
 
   def assignee_filter_text
     if @filter&.assignees
-      "assigned to #{@filter.assignees.map(&:name).to_choice_sentence}"
+      "assigned to #{@filter.assignees.pluck(:name).to_choice_sentence}"
     else
       "assigned to anyone"
     end
