@@ -2,7 +2,7 @@ require "test_helper"
 
 class FilterTest < ActiveSupport::TestCase
   test "persistence" do
-    assert_difference "Filter.count", +1 do
+    assert_difference "users(:david).filters.count", +1 do
       filter = users(:david).filters.persist!(indexed_by: "most_boosted")
 
       assert_changes "filter.reload.updated_at" do

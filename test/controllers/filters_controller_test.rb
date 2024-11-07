@@ -6,7 +6,7 @@ class FiltersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create" do
-    assert_difference "Filter.count", +1 do
+    assert_difference "users(:david).filters.count", +1 do
       post filters_url, params: {
         indexed_by: "popped",
         assignments: "unassigned",
@@ -25,7 +25,7 @@ class FiltersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "destroy" do
-    assert_difference "Filter.count", -1 do
+    assert_difference "users(:david).filters.count", -1 do
       delete filter_url(filters(:jz_assignments))
     end
     assert_redirected_to bubbles_path(filters(:jz_assignments).params)
