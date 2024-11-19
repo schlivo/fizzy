@@ -6,7 +6,7 @@ class BoostsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create" do
-    assert_difference "bubbles(:logo).reload.boost_count", +1 do
+    assert_difference "bubbles(:logo).reload.boosts_count", +1 do
       post bucket_bubble_boosts_url(buckets(:writebook), bubbles(:logo), format: :turbo_stream)
     end
 

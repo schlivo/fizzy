@@ -9,7 +9,7 @@ module BubblesHelper
 
   def bubble_size(bubble)
     rank =
-      case bubble.activity_count
+      case bubble.activity_score
       when 0..5   then "one"
       when 6..10  then "two"
       when 11..25 then "three"

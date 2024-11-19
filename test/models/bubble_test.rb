@@ -14,7 +14,7 @@ class BubbleTest < ActiveSupport::TestCase
   end
 
   test "boosting" do
-    assert_difference %w[ bubbles(:logo).boost_count Event.count ], +1 do
+    assert_difference %w[ bubbles(:logo).boosts_count bubbles(:logo).activity_score Event.count ], +1 do
       bubbles(:logo).boost!
     end
   end
@@ -33,7 +33,7 @@ class BubbleTest < ActiveSupport::TestCase
   end
 
   test "ordering by activity" do
-    bubbles(:layout).update! boost_count: 1_000
+    bubbles(:layout).tap { |b| b.update!(boosts_count: 1_000) }.rescore
     assert_equal bubbles(:layout, :logo, :shipping, :text), Bubble.ordered_by_activity
   end
 
@@ -42,7 +42,7 @@ class BubbleTest < ActiveSupport::TestCase
   end
 
   test "ordering by boosts" do
-    bubbles(:layout).update! boost_count: 1_000
+    bubbles(:layout).update! boosts_count: 1_000
     assert_equal bubbles(:layout, :logo, :shipping, :text), Bubble.ordered_by_boosts
   end
 

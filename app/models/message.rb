@@ -5,8 +5,15 @@ class Message < ApplicationRecord
 
   scope :chronologically, -> { order created_at: :asc, id: :desc }
 
-  # FIXME: Will be made redundant when we compute activity and comment count at write time. See commit.
-  scope :left_joins_messageable, ->(messageable_type) do
-    joins "LEFT OUTER JOIN #{messageable_type} ON messages.messageable_id = #{messageable_type}.id"
-  end
+  after_create :created
+  after_destroy :destroyed
+
+  private
+    def created
+      bubble.comment_created if comment?
+    end
+
+    def destroyed
+      bubble.comment_destroyed if comment?
+    end
 end

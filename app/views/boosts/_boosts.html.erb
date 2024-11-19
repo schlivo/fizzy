@@ -4,11 +4,11 @@
         animation_play_class: "boosting",
         toggle_class_toggle_class: "boosting",
         action: "animationend->toggle-class#toggle" },
-      hidden: !bubble.boost_count.positive? do %>
+      hidden: !bubble.boosts_count.positive? do %>
   <%= button_to bucket_bubble_boosts_path(bubble.bucket, bubble),
       class: "btn btn--plain",
       data: { action: "toggle-class#toggle" },
       form_class: "full-width" do %>
-    <%= tag.span("+ #{bubble.boost_count}") if bubble.boost_count.positive? %>
+    <%= tag.span("+ #{bubble.boosts_count}") if bubble.boosts_count.positive? %>
   <% end %>
 <% end %>

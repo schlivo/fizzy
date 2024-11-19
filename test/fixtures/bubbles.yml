@@ -5,7 +5,9 @@ logo:
   color: "#ED8008"
   due_on: <%= 3.days.from_now %>
   created_at: <%= 1.week.ago %>
-  boost_count: 5
+  boosts_count: 5
+  comments_count: 2
+  activity_score: 7
 
 layout:
   bucket: writebook
@@ -13,6 +15,8 @@ layout:
   title: Layout is broken
   color: "#698F9C"
   created_at: <%= 1.week.ago %>
+  comments_count: 1
+  activity_score: 1
 
 text:
   bucket: writebook
