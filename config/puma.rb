@@ -21,4 +21,4 @@ pidfile ENV.fetch("PIDFILE", "tmp/pids/server.pid")
 plugin :tmp_restart
 
 # Run Solid Queue with Puma
-plugin :solid_queue
+plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
