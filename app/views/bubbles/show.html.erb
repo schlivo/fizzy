@@ -1,7 +1,7 @@
 <% @page_title = @bubble.title %>
 
 <% content_for :header do %>
-  <% if @bubble.can_recover_abandoned_creation? %>
+  <% if @bubble.creating? && @bubble.can_recover_abandoned_creation? %>
     <div class="flex align-center gap-half fill-selected justify-center border-block margin-block-end"
           style="--border-color: var(--color-selected-dark); --border-style: dashed; view-transition-name: draft-banner;">
       You have an unsaved bubble. Would you like to continue where you left off?
