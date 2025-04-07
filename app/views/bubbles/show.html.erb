@@ -5,7 +5,7 @@
     <div class="fill-selected position-sticky flex align-center gap-half justify-center border-block margin-block-end"
           style="view-transition-name: draft-banner; --bubble-color: <%= @bubble.color %>;">
       You have an unsaved work. Would you like to continue where you left off?
-      <%= button_to bucket_bubble_recover_path(@bubble.bucket, @bubble), class: "btn btn--reversed", data: { turbo_action: "replace" } do %>
+      <%= button_to bubble_recover_path(@bubble), class: "btn btn--reversed", data: { turbo_action: "replace" } do %>
         <span>Restore</span>
       <% end %>
     </div>
