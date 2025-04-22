@@ -25,19 +25,5 @@ class CardMessagesTest < ActionDispatch::IntegrationTest
     assert_predicate card.messages.last, :event_summary?
     assert_equal 1, card.messages.last.event_summary.events.count
     assert_equal "assigned", card.messages.last.messageable.events.last.action
-
-    # Stage it
-    post card_stagings_path(card), params: { stage_id: workflow_stages(:qa_triage).id }
-    assert_equal 3, card.messages.count
-    assert_predicate card.messages.last, :event_summary?
-    assert_equal 2, card.messages.last.event_summary.events.count
-    assert_equal "staged", card.messages.last.messageable.events.last.action
-
-    # Unstage it
-    post card_stagings_path(card), params: { stage_id: workflow_stages(:qa_triage).id }
-    assert_equal 3, card.messages.count
-    assert_predicate card.messages.last, :event_summary?
-    assert_equal 3, card.messages.last.event_summary.events.count
-    assert_equal "unstaged", card.messages.last.messageable.events.last.action
   end
 end

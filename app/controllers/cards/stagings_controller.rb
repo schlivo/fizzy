@@ -1,20 +1,8 @@
 class Cards::StagingsController < ApplicationController
   include CardScoped
 
-  before_action :set_stage
-
-  def create
-    if @stage
-      @card.toggle_stage @stage
-    else
-      @card.update!(stage: nil)
-    end
-
+  def update
+    @card.change_stage_to @collection.workflow.stages.find(params[:stage_id])
     render_card_replacement
   end
-
-  private
-    def set_stage
-      @stage = Workflow::Stage.find_by(id: params[:stage_id])
-    end
 end

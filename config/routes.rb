@@ -26,17 +26,17 @@ Rails.application.routes.draw do
   resources :cards do
     scope module: :cards do
       resource :engagement
+      resource :goldness
       resource :image
       resource :pin
       resource :closure
       resource :publish
       resource :reading
       resource :recover
+      resource :staging
       resource :watch
-      resource :goldness
 
       resources :assignments
-      resources :stagings
       resources :taggings
 
       resources :comments do
