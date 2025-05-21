@@ -22,7 +22,7 @@ module NotificationsHelper
     tag.div id: dom_id(notification), class: "tray__item" do
       concat(
         link_to(notification,
-          class: [ "card card--notification", { "card--closed": notification.notifiable_target.closed? } ],
+          class: [ "card card--notification", { "card--closed": notification_closed?(notification) } ],
           data: { action: "click->dialog#close", turbo_frame: "_top" },
           &)
       )
@@ -62,5 +62,10 @@ module NotificationsHelper
 
     def card_notification_title(card)
       card.title.presence || "Card #{card.id}"
+    end
+
+    def notification_closed?(notification)
+      eventable = notification.source.eventable
+      eventable.respond_to?(:card) ? eventable.card.closed? : eventable.closed?
     end
 end
