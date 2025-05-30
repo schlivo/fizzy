@@ -10,6 +10,16 @@ lexical-editor {
       }
     }
   }
+
+  &.lexical-editor--empty {
+    .lexical-editor__content:not(:focus):before {
+      content: attr(placeholder);
+      color: currentColor;
+      opacity: 0.5;
+      pointer-events: none;
+      display: block;
+    }
+  }
 }
 
 .lexical-dialog-actions {

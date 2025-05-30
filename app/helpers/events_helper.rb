@@ -105,6 +105,8 @@ module EventsHelper
     case event.action
     when "card_assigned"
       "assigned"
+    when "card_unassigned"
+      "remove-med"
     when "card_staged"
       "bolt"
     when "card_unstaged"
