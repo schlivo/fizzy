@@ -33,7 +33,7 @@ class Cards::DropsController < ApplicationController
 
     def render_column_replacement
       page_and_filter = page_and_filter_for @filter.with(engagement_status: @drop_target.to_s), per_page: CardsController::PAGE_SIZE
-      render turbo_stream: turbo_stream.replace("#{@drop_target}-cards", partial: "cards/index/engagement/#{@drop_target}", locals: page_and_filter.to_h)
+      render turbo_stream: turbo_stream.replace("#{@drop_target}-cards", method: :morph, partial: "cards/index/engagement/#{@drop_target}", locals: page_and_filter.to_h)
     end
 
     def page_and_filter_for(filter, per_page: nil)
