@@ -10,6 +10,7 @@ class Prompts::CommandsController < ApplicationController
       [ "/do", "Move cards to Doing", "/do" ],
       [ "/reconsider", "Move cards back to Considering", "/reconsider" ],
       [ "/search", "Search cards and comments", "/search " ],
+      [ "/user", "Open user profile", "/user " ],
       [ "/tag", "Tag selected cards", "/tag #" ],
       [ "/stage", "Move cards to a Workflow Stage", "/stage " ],
       [ "/help", "Show help menu", "/help" ]

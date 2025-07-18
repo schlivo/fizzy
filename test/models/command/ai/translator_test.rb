@@ -127,6 +127,8 @@ class Command::Ai::TranslatorTest < ActionDispatch::IntegrationTest
     assert_command({ commands: [ "/visit #{edit_user_path(@user, script_name: nil)}" ] }, "edit my profile")
     assert_command({ commands: [ "/visit #{account_settings_path(script_name: nil)}" ] }, "manage users")
     assert_command({ commands: [ "/visit #{account_settings_path(script_name: nil)}" ] }, "account settings")
+
+    assert_command({ commands: [ "/user mike" ] }, "mike profile page")
   end
 
   test "view users profiles" do

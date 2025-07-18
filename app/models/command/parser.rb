@@ -56,6 +56,8 @@ class Command::Parser
         Command::AddCard.new(card_title: combined_arguments, collection_id: guess_collection&.id)
       when "/search"
         Command::Search.new(terms: combined_arguments)
+      when "/user"
+        Command::GoToUser.new(user_id: context.find_user(combined_arguments)&.id)
       when "/stage"
         Command::Stage.new(stage_id: context.find_workflow_stage(combined_arguments)&.id, card_ids: cards.ids)
       when "/visit"
