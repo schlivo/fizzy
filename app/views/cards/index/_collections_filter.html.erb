@@ -13,7 +13,7 @@
     <% end %>
   <% elsif Current.user.collections.many? %>
     <%= link_to cards_path(filter.as_params.except(:collection_ids)), class: "popup__group", data: { filter_target: "item", navigable_list_target: "item" } do %>
-      <label class="btn txt-xx-small flex-item-no-shrink">
+      <label class="popup__radio btn txt-xx-small flex-item-no-shrink">
         <input type="checkbox" <%= "checked" if filter.collection_ids.empty? %>>
 
         <span class="for-screen-reader">
@@ -29,7 +29,7 @@
 
     <% Current.user.collections.ordered_by_recently_accessed.each do |collection| %>
       <li class="popup__group" data-filter-target="item" data-navigable-list-target="item">
-        <label class="btn txt-xx-small flex-item-no-shrink">
+        <label class="popup__radio btn txt-xx-small flex-item-no-shrink">
           <%= form.check_box "collection_ids[]", {
                 checked: filter.collections.include?(collection),
                 data: { action: "change->form#submit" },
