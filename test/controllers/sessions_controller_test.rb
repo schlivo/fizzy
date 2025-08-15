@@ -6,7 +6,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
     delete session_path
 
-    assert_redirected_to Launchpad.login_url(account: Account.sole)
+    assert_redirected_to Launchpad.logout_url
     assert_not cookies[:session_token].present?
   end
 

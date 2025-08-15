@@ -17,7 +17,7 @@ class SessionsController < ApplicationController
 
   def destroy
     terminate_session
-    redirect_to_login_url
+    redirect_to_logout_url
   end
 
   private

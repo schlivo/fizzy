@@ -8,6 +8,10 @@ module Launchpad
     url product_account_path("/signin", product: product, account: account), params
   end
 
+  def logout_url
+    url "/signout"
+  end
+
   def authentication_url(**params)
     url "/authenticate", params.merge(product: :fizzy)
   end
