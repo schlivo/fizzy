@@ -14,6 +14,7 @@
     inset-block: auto env(safe-area-inset-bottom);
     inline-size: var(--tray-size);
     position: fixed;
+    transition: inset var(--tray-duration) var(--tray-timing-function);
     z-index: var(--z-tray);
 
     /* Make the dialog, expander, and actions inhabit the same space */
@@ -330,6 +331,10 @@
   .tray--pins {
     inset-inline: var(--tray-margin) auto;
 
+    #footer:has(.bar__placeholder[hidden]) & {
+      inset-inline-start: -100%;
+    }
+
     .tray__item {
       --tray-item-z: calc(10 - var(--tray-item-index));
 
@@ -463,6 +468,10 @@
 
   .tray--notifications {
     inset-inline: auto var(--tray-margin);
+
+    #footer:has(.bar__placeholder[hidden]) & {
+      inset-inline-end: -100%;
+    }
 
     .tray__item,
     [data-navigable-list-target~=item] {
