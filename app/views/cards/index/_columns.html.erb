@@ -8,8 +8,6 @@
         <% workflow.stages.each do |stage| %>
           <%= render "cards/index/engagement/doing", user_filtering: user_filtering, **doing.to_h, stage: stage %>
         <% end %>
-      <% else %>
-        <%= render "cards/index/engagement/doing", user_filtering: user_filtering, **doing.to_h %>
       <% end %>
 
       <%= render "cards/index/engagement/closed", user_filtering: user_filtering, **closed.to_h %>
