@@ -569,11 +569,11 @@ GEM
     sqlite-vec (0.1.7.alpha.2-x86_64-darwin)
     sqlite-vec (0.1.7.alpha.2-x86_64-linux)
     sqlite-vec (0.1.7.alpha.2-x86_64-mingw32)
-    sqlite3 (2.7.3)
+    sqlite3 (2.7.4)
       mini_portile2 (~> 2.8.0)
-    sqlite3 (2.7.3-arm64-darwin)
-    sqlite3 (2.7.3-x86_64-darwin)
-    sqlite3 (2.7.3-x86_64-linux-gnu)
+    sqlite3 (2.7.4-arm64-darwin)
+    sqlite3 (2.7.4-x86_64-darwin)
+    sqlite3 (2.7.4-x86_64-linux-gnu)
     sshkit (1.24.0)
       base64
       logger
