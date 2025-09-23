@@ -40,10 +40,13 @@ gem "sentry-ruby"
 gem "sentry-rails"
 gem "rails_structured_logging", bc: "rails-structured-logging"
 gem "yabeda"
-gem "yabeda-rails"
-gem "yabeda-puma-plugin"
-gem "webrick" # required for yabeda-prometheus metrics server
+gem "yabeda-activejob", github: "rosa/yabeda-activejob", branch: "support-end-time-in-seconds"
+gem "yabeda-gc"
+gem "yabeda-http_requests"
 gem "yabeda-prometheus-mmap"
+gem "yabeda-puma-plugin"
+gem "yabeda-rails"
+gem "webrick" # required for yabeda-prometheus metrics server
 gem "prometheus-client-mmap", "~> 1.1"
 
 # AI
