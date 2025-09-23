@@ -10,13 +10,13 @@ end
 
 tenant_id = ARGV[0]
 CONTAINER = "fizzy-web-production-b2f4038ea1fd054e313308940d9e445428f35b23"
-REMOPTE_PATH = "/rails/storage/tenants/production/#{tenant_id}/db/main.sqlite3"
+REMOTE_PATH = "/rails/storage/tenants/production/#{tenant_id}/db/main.sqlite3.1"
 
 Dir.mktmpdir do |tmpdir|
   local_file = File.join(tmpdir, "main.sqlite3")
 
-  puts "→ Copying #{REMOPTE_PATH} from container to #{local_file}"
-  cmd = %(ssh app@fizzy-app-101 "docker cp #{CONTAINER}:#{REMOPTE_PATH} -" | tar -xOf - > #{local_file})
+  puts "→ Copying #{REMOTE_PATH} from container to #{local_file}"
+  cmd = %(ssh app@fizzy-app-101 "docker cp #{CONTAINER}:#{REMOTE_PATH} -" | tar -xOf - > #{local_file})
   system(cmd) or abort("Failed to copy database file")
 
   puts "→ Running script/load-prod-db-in-dev.rb with #{local_file}"
