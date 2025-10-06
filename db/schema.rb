@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_10_03_205559) do
+ActiveRecord::Schema[8.1].define(version: 2025_10_06_091442) do
   create_table "accesses", force: :cascade do |t|
     t.datetime "accessed_at"
     t.integer "collection_id", null: false
@@ -447,6 +447,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_03_205559) do
     t.index ["user_id"], name: "index_user_settings_on_user_id"
   end
 
+  create_table "user_weekly_highlights", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "period_highlights_id", null: false
+    t.date "starts_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["period_highlights_id"], name: "index_user_weekly_highlights_on_period_highlights_id"
+    t.index ["user_id", "starts_at"], name: "index_user_weekly_highlights_on_user_id_and_starts_at", unique: true
+    t.index ["user_id"], name: "index_user_weekly_highlights_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
@@ -548,6 +559,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_10_03_205559) do
   add_foreign_key "taggings", "cards"
   add_foreign_key "taggings", "tags"
   add_foreign_key "user_settings", "users"
+  add_foreign_key "user_weekly_highlights", "period_highlights", column: "period_highlights_id"
+  add_foreign_key "user_weekly_highlights", "users"
   add_foreign_key "watches", "cards"
   add_foreign_key "watches", "users"
   add_foreign_key "webhook_delinquency_trackers", "webhooks"

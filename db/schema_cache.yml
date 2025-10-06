@@ -464,12 +464,12 @@ columns:
   - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
     auto_increment:
     name: due_on
-    cast_type: !ruby/object:ActiveRecord::Type::Date
+    cast_type: &37 !ruby/object:ActiveRecord::Type::Date
       precision:
       scale:
       limit:
       timezone:
-    sql_type_metadata: !ruby/object:ActiveRecord::ConnectionAdapters::SqlTypeMetadata
+    sql_type_metadata: &38 !ruby/object:ActiveRecord::ConnectionAdapters::SqlTypeMetadata
       sql_type: date
       type: :date
       limit:
@@ -1268,8 +1268,33 @@ columns:
     comment:
   - *9
   - *18
+  user_weekly_highlights:
+  - *5
+  - *6
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: period_highlights_id
+    cast_type: *3
+    sql_type_metadata: *4
+    'null': false
+    default:
+    default_function:
+    collation:
+    comment:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: starts_at
+    cast_type: *37
+    sql_type_metadata: *38
+    'null': false
+    default:
+    default_function:
+    collation:
+    comment:
+  - *9
+  - *18
   users:
-  - &38 !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+  - &40 !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
     auto_increment:
     name: active
     cast_type: *32
@@ -1353,7 +1378,7 @@ columns:
     comment:
   - *6
   - *9
-  - &37 !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+  - &39 !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
     auto_increment:
     name: webhook_id
     cast_type: *3
@@ -1407,9 +1432,9 @@ columns:
     collation:
     comment:
   - *9
-  - *37
+  - *39
   webhooks:
-  - *38
+  - *40
   - *24
   - *5
   - *6
@@ -1533,6 +1558,7 @@ primary_keys:
   taggings: id
   tags: id
   user_settings: id
+  user_weekly_highlights: id
   users: id
   watches: id
   webhook_delinquency_trackers: id
@@ -1589,6 +1615,7 @@ data_sources:
   taggings: true
   tags: true
   user_settings: true
+  user_weekly_highlights: true
   users: true
   watches: true
   webhook_delinquency_trackers: true
@@ -3071,6 +3098,56 @@ indexes:
     nulls_not_distinct:
     comment:
     valid: true
+  user_weekly_highlights:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
+    table: user_weekly_highlights
+    name: index_user_weekly_highlights_on_period_highlights_id
+    unique: false
+    columns:
+    - period_highlights_id
+    lengths: {}
+    orders: {}
+    opclasses: {}
+    where:
+    type:
+    using:
+    include:
+    nulls_not_distinct:
+    comment:
+    valid: true
+  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
+    table: user_weekly_highlights
+    name: index_user_weekly_highlights_on_user_id
+    unique: false
+    columns:
+    - user_id
+    lengths: {}
+    orders: {}
+    opclasses: {}
+    where:
+    type:
+    using:
+    include:
+    nulls_not_distinct:
+    comment:
+    valid: true
+  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
+    table: user_weekly_highlights
+    name: index_user_weekly_highlights_on_user_id_and_starts_at
+    unique: true
+    columns:
+    - user_id
+    - starts_at
+    lengths: {}
+    orders: {}
+    opclasses: {}
+    where:
+    type:
+    using:
+    include:
+    nulls_not_distinct:
+    comment:
+    valid: true
   users:
   - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
     table: users
@@ -3222,4 +3299,4 @@ indexes:
     comment:
     valid: true
   workflows: []
-version: 20251003205559
+version: 20251006091442
