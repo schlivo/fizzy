@@ -1,6 +1,6 @@
 class Closure::Reason < ApplicationRecord
   DEFAULT_LABELS = [
-    "Completed",
+    "Done",
     "Duplicate",
     "Maybe later",
     "Working as intended",

@@ -17,7 +17,7 @@
     <%= button_to_set_column card, column %>
   <% end %>
 
-  <%= button_to "Done", card_closure_path(card, reason: "Completed"),
+  <%= button_to "Done", card_closure_path(card, reason: "Done"),
       class: [ "workflow-stage btn", { "workflow-stage--current": card.closed? } ],
       role: "radio",
       aria: { checked: card.closed? },
