@@ -6,6 +6,7 @@ module FizzyActiveJobExtensions
 
   prepended do
     attr_reader :account
+    self.enqueue_after_transaction_commit = true
   end
 
   def initialize(...)
