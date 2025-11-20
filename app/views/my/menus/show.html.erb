@@ -66,7 +66,7 @@
       <% cache [ Current.identity, accounts ] do %>
         <%= collapsible_nav_section "Accounts" do %>
           <% accounts.each do |account| %>
-            <%= filter_place_menu_item landing_url(script_name: account.slug), account.name, "marker", new_window: true, current: account == Current.account %>
+            <%= filter_place_menu_item landing_url(script_name: account.slug), account.name, "marker", current: account == Current.account %>
           <% end %>
         <% end %>
       <% end %>
