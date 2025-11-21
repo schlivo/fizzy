@@ -15,4 +15,8 @@ export default class extends Controller {
       this.element.reload()
     }
   }
+
+  reload() {
+    this.element.reload()
+  }
 }
