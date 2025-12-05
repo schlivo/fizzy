@@ -42,9 +42,29 @@ class SmokeTest < ApplicationSystemTestCase
 
     assert_selector "div##{dom_id(notif)}"
 
-    within_window(open_new_window) { visit card_url(notif.card) }
+    new_window = open_new_window
+    switch_to_window(new_window)
+    visit card_url(notif.card)
+    # Wait for the page to load completely, including JavaScript
+    assert_selector "h1", wait: 5
+    # Force the beacon to fire by triggering visibility change
+    page.execute_script("document.dispatchEvent(new Event('visibilitychange'))")
+    # Give the beacon controller time to fire
+    sleep 0.5
 
-    assert_no_selector "div##{dom_id(notif)}"
+    # Wait for the notification to be marked as read in the database
+    # The beacon fires asynchronously, so we need to wait a bit
+    10.times do
+      break if notif.reload.read?
+      sleep 0.2
+    end
+    assert_predicate notif, :read?, "Notification should be marked as read after visiting the card"
+
+    # Switch back to the original window to check the DOM
+    switch_to_window(windows.first)
+
+    # Wait for the Turbo Stream broadcast to remove the notification from the DOM
+    assert_no_selector "div##{dom_id(notif)}", wait: 5
   end
 
   test "dragging card to a new column" do

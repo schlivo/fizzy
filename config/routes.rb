@@ -237,6 +237,7 @@ Rails.application.routes.draw do
       resources :cards, only: [:create], controller: "cards"
     end
 
+    get "cards", to: "cards#index"
     post "cards/:card_id/move", to: "cards#move"
     post "cards/:card_id/close", to: "cards#close"
     post "cards/:card_id/reopen", to: "cards#reopen"
@@ -251,6 +252,8 @@ Rails.application.routes.draw do
     resources :api_tokens, only: [:index, :new, :create, :destroy] do
       collection do
         get "users_for_account"
+        get "boards_for_account"
+        get "board_info"
       end
     end
   end

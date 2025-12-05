@@ -29,6 +29,10 @@
               <span class="txt-x-small txt-ink-medium">
                 Account: <%= token.account.name %> (#<%= token.account.external_account_id %>) •
                 User: <%= token.user.name %> (<%= token.user.identity&.email_address %>)
+                <% accessible_boards = token.user.boards.count %>
+                <% if accessible_boards > 0 %>
+                  • Boards: <%= accessible_boards %> accessible
+                <% end %>
               </span>
               <br>
               <span class="txt-x-small txt-ink-medium">

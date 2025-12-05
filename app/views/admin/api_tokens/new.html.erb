@@ -8,7 +8,7 @@
 <% end %>
 
 <article class="panel panel--wide center txt-align-start">
-  <%= form_with model: @api_token, url: admin_api_tokens_path, data: { controller: "form" }, html: { class: "flex flex-column gap" } do |form| %>
+  <%= form_with model: @api_token, url: admin_api_tokens_path, data: { controller: "form board-select" }, html: { class: "flex flex-column gap" } do |form| %>
     <% if @api_token.errors.any? %>
       <div class="margin-block-half">
         <ul class="margin-block-none txt-negative txt-small">
@@ -28,11 +28,26 @@
     </div>
 
     <div class="flex flex-column gap-half">
+      <label>
+        <strong>Board (Optional)</strong><br>
+        <p class="margin-none txt-x-small txt-subtle">Select a board to automatically set the account. Leave empty to select account manually.</p>
+      </label>
+      <select id="board_select" class="input" data-action="change->board-select#selectBoard" data-board-select-target="select">
+        <option value="">Select a board (optional)…</option>
+        <% @boards.each do |board| %>
+          <option value="<%= board.id %>" data-account-id="<%= board.account.id %>">
+            <%= board.name %> (<%= board.account.name %>)
+          </option>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="flex flex-column gap-half">
       <%= form.label :account_id do %>
         <strong>Account</strong><br>
-        <p class="margin-none txt-x-small txt-subtle">Select the account this token will be associated with</p>
+        <p class="margin-none txt-x-small txt-subtle">Select the account this token will be associated with (auto-filled if board selected above)</p>
       <% end %>
-      <%= form.collection_select :account_id, @accounts, :id, :name, { prompt: "Select an account…" }, { required: true, class: "input", data: { action: "change->user-select#loadUsers" } } %>
+      <%= form.collection_select :account_id, @accounts, :id, :name, { prompt: "Select an account…" }, { required: true, class: "input", data: { action: "change->user-select#loadUsers", board_select_target: "accountSelect" } } %>
     </div>
 
     <div class="flex flex-column gap-half" data-controller="user-select">

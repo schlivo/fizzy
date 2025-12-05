@@ -39,7 +39,31 @@ Returns a list of all boards accessible to the authenticated user.
     "creator": {
       "id": "03f5rbdwmg3sx2tntbr587rng",
       "name": "David Heinemeier Hansson"
-    }
+    },
+    "columns": [
+      {
+        "id": "03f5swdbgdw56ecg7hjgowotc",
+        "name": "Backlog",
+        "color": "var(--color-card-default)"
+      }
+    ],
+    "virtual_columns": [
+      {
+        "name": "NOT NOW",
+        "description": "Virtual column for postponed cards. Cards in this state are temporarily set aside.",
+        "is_virtual": true
+      },
+      {
+        "name": "MAYBE?",
+        "description": "Virtual column for cards awaiting triage (not yet assigned to a column).",
+        "is_virtual": true
+      },
+      {
+        "name": "DONE",
+        "description": "Virtual column for closed cards. Use the /close endpoint or set column to 'DONE'.",
+        "is_virtual": true
+      }
+    ]
   }
 ]
 ```
@@ -62,11 +86,113 @@ Returns details for a specific board.
   "creator": {
     "id": "03f5rbdwmg3sx2tntbr587rng",
     "name": "David Heinemeier Hansson"
-  }
+  },
+  "columns": [
+    {
+      "id": "03f5swdbgdw56ecg7hjgowotc",
+      "name": "Backlog",
+      "color": "var(--color-card-default)"
+    },
+    {
+      "id": "03f5swdbgdw56ecg7hjgowotd",
+      "name": "In Progress",
+      "color": "var(--color-card-1)"
+    }
+  ],
+  "virtual_columns": [
+    {
+      "name": "NOT NOW",
+      "description": "Virtual column for postponed cards. Cards in this state are temporarily set aside.",
+      "is_virtual": true
+    },
+    {
+      "name": "MAYBE?",
+      "description": "Virtual column for cards awaiting triage (not yet assigned to a column).",
+      "is_virtual": true
+    },
+    {
+      "name": "DONE",
+      "description": "Virtual column for closed cards. Use the /close endpoint or set column to 'DONE'.",
+      "is_virtual": true
+    }
+  ]
 }
 ```
 
+**Note on Virtual Columns:**
+
+Fizzy has three special virtual columns that are not stored as regular columns in the database:
+
+- **NOT NOW**: Cards that have been postponed. These are active cards that have been temporarily set aside. Use `column: "NOT NOW"` when creating or moving cards.
+- **MAYBE?**: Cards awaiting triage - active cards that haven't been assigned to a column yet. Use `column: "MAYBE?"` when creating or moving cards.
+- **DONE**: Closed cards. You can use `column: "DONE"` when creating or moving cards, or use the dedicated `/close` endpoint.
+
+These virtual columns can be used in the `column` parameter when creating cards or in the `to_column` parameter when moving cards, just like regular column names.
+
 ### Cards
+
+#### List Cards
+```
+GET /api/cards
+```
+
+Lists and filters cards accessible to the authenticated user.
+
+**Query Parameters:**
+- `board_id` (optional) - Filter by board UUID
+- `assignee_ids[]` (optional) - Array of user UUIDs to filter by assignees
+- `creator_ids[]` (optional) - Array of user UUIDs to filter by creators
+- `column` (optional) - Column name (case-insensitive) or virtual column: "NOT NOW", "MAYBE?", "DONE"
+- `tags[]` (optional) - Array of tag titles to filter by
+- `created_at` (optional) - Time window ("today", "yesterday", "thisweek", "thismonth", "thisyear", "lastweek", "lastmonth", "lastyear") or ISO8601 date/datetime
+- `status` (optional) - Filter by status: "all" (default), "closed", "not_now"
+- `sort` (optional) - Sort order: "latest" (default), "newest", "oldest"
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "title": "My Card Title",
+    "description": "Card description",
+    "status": "published",
+    "column": "In Progress",
+    "board_id": "03f5swdbgdw56ecg7hjgowotc",
+    "tags": ["urgent", "bug"],
+    "assignees": [
+      {
+        "id": "03f5rbdwmg3sx2tntbr587rng",
+        "name": "David Heinemeier Hansson"
+      }
+    ],
+    "created_at": "2025-12-05T12:18:27Z",
+    "updated_at": "2025-12-05T12:18:27Z"
+  }
+]
+```
+
+**Examples:**
+```bash
+# List all cards assigned to a user
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://fizzy.localhost:3006/api/cards?assignee_ids[]=USER_UUID"
+
+# List cards created today
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://fizzy.localhost:3006/api/cards?created_at=today"
+
+# List cards with specific tags
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://fizzy.localhost:3006/api/cards?tags[]=urgent&tags[]=bug"
+
+# List cards in a specific column
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://fizzy.localhost:3006/api/cards?column=In%20Progress"
+
+# Combine multiple filters
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+  "http://fizzy.localhost:3006/api/cards?board_id=BOARD_UUID&assignee_ids[]=USER_UUID&tags[]=urgent&sort=newest"
+```
 
 #### Create Card
 ```
@@ -84,6 +210,19 @@ Creates a new card in the specified board.
   "tags": ["urgent", "bug"]
 }
 ```
+
+**Column Parameter:**
+
+The `column` parameter accepts either:
+- A regular column name (e.g., "Backlog", "In Progress")
+- A virtual column name: "NOT NOW", "MAYBE?", or "DONE"
+
+**Note:** Column name matching is case-insensitive. You can use "backlog", "Backlog", or "BACKLOG" - the API will find the column and return it with its original case (e.g., "Backlog"). Virtual columns are returned in their standard case ("NOT NOW", "MAYBE?", "DONE").
+
+When using virtual columns:
+- `"NOT NOW"` (case-insensitive): Creates the card and immediately postpones it
+- `"MAYBE?"` (case-insensitive): Creates the card without assigning it to a column (awaiting triage)
+- `"DONE"` (case-insensitive): Creates the card and immediately closes it
 
 **Response:**
 ```json
@@ -114,6 +253,19 @@ Moves a card to a different column.
   "to_column": "Done"
 }
 ```
+
+**To Column Parameter:**
+
+The `to_column` parameter accepts either:
+- A regular column name (e.g., "Backlog", "In Progress")
+- A virtual column name: "NOT NOW", "MAYBE?", or "DONE"
+
+**Note:** Column name matching is case-insensitive. You can use "backlog", "Backlog", or "BACKLOG" - the API will find the column and return it with its original case (e.g., "Backlog"). Virtual columns are returned in their standard case ("NOT NOW", "MAYBE?", "DONE").
+
+When using virtual columns:
+- `"NOT NOW"` (case-insensitive): Postpones the card (moves it to "Not Now")
+- `"MAYBE?"` (case-insensitive): Sends the card back to triage (removes it from its current column)
+- `"DONE"` (case-insensitive): Closes the card (same as using the `/close` endpoint)
 
 **Response:**
 ```json
