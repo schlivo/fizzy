@@ -244,6 +244,7 @@ Rails.application.routes.draw do
     post "cards/:card_id/reopen", to: "cards#reopen"
     post "cards/:card_id/assign", to: "cards#assign"
     post "cards/:card_id/tag", to: "cards#tag"
+    get "cards/:card_id/tags", to: "cards#tags"
     get "cards/:card_id/comments", to: "comments#index"
     post "cards/:card_id/comments", to: "comments#create"
     get "cards/search", to: "cards#search"

@@ -8,6 +8,8 @@ class Api::CommentsController < Api::BaseController
   end
 
   def create
+    raise ArgumentError, "body parameter is required" unless params[:body].present?
+    
     comment = @card.comments.create!(
       creator: Current.user,
       body: params[:body]
@@ -28,7 +30,7 @@ class Api::CommentsController < Api::BaseController
 
   private
     def set_card
-      @card = Current.account.cards.find_by!(number: params[:card_id])
+      @card = Current.user.accessible_cards.find_by!(number: params[:card_id])
     end
 
     def comment_json(comment)

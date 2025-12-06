@@ -321,5 +321,42 @@ class Api::CardsControllerTest < ActionDispatch::IntegrationTest
     json = JSON.parse(response.body)
     assert_equal "not_found", json["error"]
   end
+
+  test "tags returns card tags" do
+    card = cards(:logo)
+    tag1 = @account.tags.find_or_create_by!(title: "urgent")
+    tag2 = @account.tags.find_or_create_by!(title: "bug")
+    card.tags << tag1 unless card.tags.include?(tag1)
+    card.tags << tag2 unless card.tags.include?(tag2)
+    
+    get "/api/cards/#{card.number}/tags",
+        headers: { "Authorization" => "Bearer #{@api_token.token}" }
+    assert_response :success
+    
+    json = JSON.parse(response.body)
+    assert_includes json.keys, "tags"
+    assert json["tags"].is_a?(Array)
+    assert_includes json["tags"], "urgent"
+    assert_includes json["tags"], "bug"
+  end
+
+  test "tags returns empty array for card with no tags" do
+    card = cards(:logo)
+    card.tags.clear
+    
+    get "/api/cards/#{card.number}/tags",
+        headers: { "Authorization" => "Bearer #{@api_token.token}" }
+    assert_response :success
+    
+    json = JSON.parse(response.body)
+    assert_includes json.keys, "tags"
+    assert_equal [], json["tags"]
+  end
+
+  test "tags requires authentication" do
+    card = cards(:logo)
+    get "/api/cards/#{card.number}/tags"
+    assert_response :unauthorized
+  end
 end
 

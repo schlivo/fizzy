@@ -1,6 +1,6 @@
 class Api::CardsController < Api::BaseController
   before_action :set_board, only: [:create]
-  before_action :set_card, only: [:move, :close, :reopen, :assign, :tag, :update]
+  before_action :set_card, only: [:move, :close, :reopen, :assign, :tag, :tags, :update]
 
   def index
     cards = Current.user.accessible_cards.published
@@ -204,6 +204,10 @@ class Api::CardsController < Api::BaseController
     render json: card_json(@card.reload)
   end
 
+  def tags
+    render json: { tags: @card.tags.pluck(:title) }
+  end
+
   def update
     @card.update!(card_update_params)
     render json: card_json(@card.reload)
@@ -211,11 +215,11 @@ class Api::CardsController < Api::BaseController
 
   private
     def set_board
-      @board = Current.account.boards.find(params[:board_id])
+      @board = Current.user.boards.find(params[:board_id])
     end
 
     def set_card
-      @card = Current.account.cards.find_by!(number: params[:card_id])
+      @card = Current.user.accessible_cards.find_by!(number: params[:card_id])
     end
 
     def find_column_by_name(column_name)

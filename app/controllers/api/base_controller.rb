@@ -8,6 +8,7 @@ class Api::BaseController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
   rescue_from ArgumentError, with: :bad_request
+  rescue_from StandardError, with: :internal_server_error
 
   private
     def record_not_found
@@ -20,6 +21,16 @@ class Api::BaseController < ApplicationController
 
     def bad_request(exception)
       render json: { error: "bad_request", message: exception.message }, status: :bad_request
+    end
+
+    def internal_server_error(exception)
+      Rails.logger.error "API Error: #{exception.class} - #{exception.message}"
+      Rails.logger.error exception.backtrace.join("\n")
+      
+      render json: { 
+        error: "internal_server_error", 
+        message: Rails.env.development? ? exception.message : "An internal error occurred"
+      }, status: :internal_server_error
     end
 
     def render_json_error(message, status: :unprocessable_entity)
