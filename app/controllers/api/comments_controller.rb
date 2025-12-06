@@ -13,6 +13,11 @@ class Api::CommentsController < Api::BaseController
       body: params[:body]
     )
 
+    # Create mentions and card_links synchronously for API responses
+    # (normally done asynchronously via jobs, but we need them immediately)
+    comment.create_mentions(mentioner: Current.user)
+    comment.create_card_links(creator: Current.user)
+
     # Reload with associations to avoid N+1 queries
     comment = Comment.preloaded
       .includes(mentions: :mentionee, card_links: :card, creator: :identity)
