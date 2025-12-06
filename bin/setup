@@ -119,6 +119,17 @@ if which pacman >/dev/null 2>&1; then
   if ! pacman -Q "${packages[@]}" >/dev/null 2>&1; then
     step "Installing packages" sudo pacman -S --noconfirm --needed "${packages[@]}"
   fi
+elif which brew >/dev/null 2>&1; then
+  packages=(imagemagick openslide vips gitleaks)
+  missing_packages=()
+  for pkg in "${packages[@]}"; do
+    if ! brew list "$pkg" &>/dev/null; then
+      missing_packages+=("$pkg")
+    fi
+  done
+  if [ ${#missing_packages[@]} -gt 0 ]; then
+    step "Installing packages" brew install "${missing_packages[@]}"
+  fi
 fi
 
 bundle config set --local auto_install true
