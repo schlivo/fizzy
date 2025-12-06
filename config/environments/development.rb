@@ -90,8 +90,12 @@ Rails.application.configure do
       # Authentication can be added via SMTP_USERNAME and SMTP_PASSWORD env vars if needed
     }
   elsif Rails.root.join("tmp/email-dev.txt").exist?
-    # Use letter_opener to preview emails in browser
-    config.action_mailer.delivery_method = :letter_opener
+    # Use letter_opener_web in Docker (can't open browser), letter_opener locally
+    if File.exist?("/.dockerenv")
+      config.action_mailer.delivery_method = :letter_opener_web
+    else
+      config.action_mailer.delivery_method = :letter_opener
+    end
     config.action_mailer.perform_deliveries = true
   else
     # Default: don't send emails, code shown in browser console
