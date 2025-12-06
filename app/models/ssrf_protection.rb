@@ -9,8 +9,14 @@ module SsrfProtection
 
   def resolve_public_ip(hostname)
     ip_addresses = resolve_dns(hostname)
-    public_ips = ip_addresses.reject { |ip| private_address?(ip) }
-    public_ips.first&.to_s
+    
+    # In development, allow private IPs for local testing (e.g., host.docker.internal)
+    if Rails.env.development?
+      ip_addresses.first&.to_s
+    else
+      public_ips = ip_addresses.reject { |ip| private_address?(ip) }
+      public_ips.first&.to_s
+    end
   end
 
   def private_address?(ip)
