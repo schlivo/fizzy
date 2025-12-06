@@ -26,9 +26,10 @@ class Api::CommentsController < Api::BaseController
       comment.create_mentions(mentioner: Current.user)
       comment.create_card_links(creator: Current.user)
     ensure
-      # Re-enable callbacks for future operations
-      Comment.set_callback(:commit, :after, :create_mentions_later)
-      Comment.set_callback(:commit, :after, :create_card_links_later)
+      # Re-enable callbacks for future operations with original conditions
+      # after_save_commit registers callbacks with on: :create, :update
+      Comment.set_callback(:commit, :after, :create_mentions_later, on: [ :create, :update ], if: :should_create_mentions?)
+      Comment.set_callback(:commit, :after, :create_card_links_later, on: [ :create, :update ], if: :should_create_card_links?)
     end
 
     # Reload with associations to avoid N+1 queries

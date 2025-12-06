@@ -24,7 +24,7 @@ class Api::NotificationsController < Api::BaseController
   end
 
   def read
-    notification = Current.user.notifications.find(params[:notification_id])
+    notification = Current.user.notifications.find(params[:id])
     notification.read
     
     render json: {
