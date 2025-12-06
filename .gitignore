@@ -42,3 +42,4 @@
 /config/credentials/*.key
 .DS_Store
 .github_token
+.cursor/

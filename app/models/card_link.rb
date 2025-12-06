@@ -9,3 +9,4 @@ class CardLink < ApplicationRecord
   validates :card_id, uniqueness: { scope: [ :source_type, :source_id ] }
 end
 
+
