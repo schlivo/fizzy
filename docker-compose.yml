@@ -20,6 +20,9 @@ services:
       # Allow custom host domains (e.g., for remote development)
       # Uncomment and set your domain: ALLOWED_HOST_DOMAINS=example.com
       # - ALLOWED_HOST_DOMAINS=example.com
+      # Webhook server port (for fizzy-sim-server running on host)
+      # Default: 9292
+      - WEBHOOK_SERVER_PORT=${WEBHOOK_SERVER_PORT:-9292}
     volumes:
       # Mount entire codebase for hot reload
       - .:/rails

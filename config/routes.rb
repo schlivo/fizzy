@@ -238,6 +238,7 @@ Rails.application.routes.draw do
     end
 
     get "cards", to: "cards#index"
+    get "cards/search", to: "cards#search"
     patch "cards/:card_id", to: "cards#update"
     post "cards/:card_id/move", to: "cards#move"
     post "cards/:card_id/close", to: "cards#close"
@@ -247,7 +248,6 @@ Rails.application.routes.draw do
     get "cards/:card_id/tags", to: "cards#tags"
     get "cards/:card_id/comments", to: "comments#index"
     post "cards/:card_id/comments", to: "comments#create"
-    get "cards/search", to: "cards#search"
     get "users/find", to: "users#find"
     get "users/search", to: "users#search"
     resources :notifications, only: [:index] do
