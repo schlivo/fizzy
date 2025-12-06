@@ -19,11 +19,51 @@ module Mentions
 
   private
     def scan_mentionees
-      mentionees_from_attachments & mentionable_users
+      (mentionees_from_attachments + mentionees_from_plain_text) & mentionable_users
     end
 
     def mentionees_from_attachments
       rich_text_associations.flat_map { send(it.name)&.body&.attachments&.collect { it.attachable } }.compact
+    end
+
+    def mentionees_from_plain_text
+      return [] unless mentionable_content.present?
+
+      mentions = []
+      plain_text = mentionable_content
+
+      # Match @username or @username@domain patterns
+      plain_text.scan(/@([\w.]+(?:@[\w.-]+)?)/) do |match|
+        mention_handle = match[0]
+        users = find_users_by_mention(mention_handle)
+        mentions.concat(users)
+      end
+
+      mentions.uniq
+    end
+
+    def find_users_by_mention(mention_handle)
+      # Handle format: username@domain or just username
+      if mention_handle.include?("@")
+        # Full email format: username@domain
+        email = mention_handle
+        identity = Identity.find_by(email_address: email)
+        return [] unless identity
+
+        users = identity.users.where(account: account)
+        return users.to_a if users.any?
+      else
+        # Username only: try to match by email prefix or name
+        username = mention_handle.downcase
+        mentionable_users.select do |user|
+          email_prefix = user.identity&.email_address&.split("@")&.first&.downcase
+          name_downcase = user.name.downcase.gsub(/\s+/, ".")
+          
+          email_prefix == username || name_downcase == username || 
+            user.name.downcase.include?(username) || 
+            (email_prefix && email_prefix.include?(username))
+        end
+      end
     end
 
     def mentionable_users
