@@ -32,8 +32,46 @@ class Filter < ApplicationRecord
       result = result.where("cards.created_at": creation_window) if creation_window
       result = result.closed_at_window(closure_window) if closure_window
       result = result.closed_by(closers) if closers.present?
-      result = terms.reduce(result) do |result, term|
-        result.mentioning(term, user: creator)
+      
+      # Separate numeric terms (card numbers) from text terms
+      numeric_terms, text_terms = terms.partition { |term| term =~ /^\d+$/ }
+      
+      # If we have numeric terms, find cards by number and combine with text search
+      if numeric_terms.any?
+        card_ids_by_number = numeric_terms.map do |term|
+          creator.accessible_cards.find_by(number: term.to_i)&.id
+        end.compact
+        
+        if card_ids_by_number.any?
+          # Start with cards found by number
+          numeric_result = result.where(id: card_ids_by_number)
+          
+          # If we also have text terms, combine with text search results
+          if text_terms.any?
+            text_result = text_terms.reduce(result) do |result, term|
+              result.mentioning(term, user: creator)
+            end
+            # Combine: cards matching number OR cards matching text terms
+            result = result.where(id: numeric_result.select(:id)).or(
+              result.where(id: text_result.select(:id))
+            )
+          else
+            result = numeric_result
+          end
+        elsif text_terms.any?
+          # No cards found by number, but we have text terms, so search by text
+          result = text_terms.reduce(result) do |result, term|
+            result.mentioning(term, user: creator)
+          end
+        else
+          # No cards found by number and no text terms
+          result = result.none
+        end
+      elsif text_terms.any?
+        # Only text terms, use normal text search
+        result = text_terms.reduce(result) do |result, term|
+          result.mentioning(term, user: creator)
+        end
       end
 
       result.distinct

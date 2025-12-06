@@ -32,8 +32,12 @@ class SearchesControllerTest < ActionDispatch::IntegrationTest
     assert_select "li .search__excerpt--comment", text: /I love haggis/ # one entry for the comment
     assert_match(/<mark class="circled-text"><span><\/span>haggis<\/mark>/, response.body)
 
-    # Searching by card id
+    # Searching by card id (UUID)
     get search_path(q: @card.id, script_name: "/#{@account.external_account_id}")
+    assert_select "form[data-controller='auto-submit']"
+
+    # Searching by card number
+    get search_path(q: @card.number.to_s, script_name: "/#{@account.external_account_id}")
     assert_select "form[data-controller='auto-submit']"
 
     # Searching with non-existent card id
